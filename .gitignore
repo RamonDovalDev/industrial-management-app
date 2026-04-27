@@ -1,0 +1,23 @@
+# Python (Entorno virtual y caché)
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PostgreSQL / Local DB
+*.db
+*.sqlite3
+
+# Variables de entorno (¡Muy importante por seguridad!)
+.env
+
+# VS Code y herramientas de sistema
+.vscode/
+.idea/
+.DS_Store
+
+# Frontend (Node.js)
+node_modules/
+dist/
+build/
+.npm
