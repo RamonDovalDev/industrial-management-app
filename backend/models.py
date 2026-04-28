@@ -7,8 +7,8 @@ class Press(Base):
     __tablename__ = "presses" # PostgreSQL table name
     
     id = Column(Integer, primary_key=True, index=True)
-    nombre = Column(String, unique=True, index=True)
-    estado = Column(String, default="activa") # Ex: active, inactive, maintenance
+    name = Column(String, unique=True, index=True)
+    state = Column(String, default="activa") # Ex: active, inactive, maintenance
     
     # Relation: To access easily to the planified orders in this press
     orders = relationship("Order", back_populates="press")
@@ -21,7 +21,7 @@ class Mold(Base):
     time_change_minutes = Column(Integer, default=60) # Vital for Gantt
     
     # Relation: One mold produces several references (products)
-    references = relationship("Referencia", back_populates="molde")
+    references = relationship("Reference", back_populates="mold")
 
 class Reference(Base):
     __tablename__ = "references"
@@ -47,7 +47,7 @@ class Order(Base):
     client = Column(String)
     quantity = Column(Integer)
     delivery_date = Column(DateTime)
-    state = Column(String, default="pending") # pending, planified, production, finalized
+    state = Column(String, default="pending") # pending, planned, production, finished
     
     # Foreign keys
     reference_id = Column(Integer, ForeignKey("references.id"))
