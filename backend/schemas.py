@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional
 from datetime import datetime
 
@@ -16,10 +16,12 @@ class PressCreate(PressBase):
 # Response: what we return to the Frontend when asks for a Press
 class Press(PressBase):
     id: int
+    model_config = ConfigDict(from_attributes=True)
 
-    # Class that turns SQL to JSON
-    class Config:
-        from_attributes = True
+# Update a press
+class PressUpdate(BaseModel):
+    name: Optional[str] = None
+    state: Optional[str] =  None
 
 # SCHEMAS FOR "MOLD" ENTITY
 class MoldBase(BaseModel):
@@ -31,9 +33,7 @@ class MoldCreate(MoldBase):
 
 class Mold(MoldBase):
     id: int
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # SCHEMES FOR "PRESS" ENTITY
 class ReferenceBase(BaseModel):
@@ -48,9 +48,7 @@ class ReferenceCreate(ReferenceBase):
 
 class Reference(ReferenceBase):
     id: int
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # SCHEMAS FOR "ORDER" ENTITY
 class OrderBase(BaseModel):
@@ -67,6 +65,10 @@ class OrderCreate(OrderBase):
 
 class Order(OrderBase):
     id: int
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True
+class OrderUpdate(BaseModel):
+    press_id: Optional[int] = None
+    state: Optional[str] = None
+    delivery_date: Optional[datetime] = None
+    quantity: Optional[int] = None

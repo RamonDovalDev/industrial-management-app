@@ -15,6 +15,31 @@ def create_press(db: Session, press: schemas.PressCreate):
 
     return db_press
 
+# Update press
+def update_press(db: Session, press_id: int, press_update: schemas.PressUpdate):
+    # Search for the press with "id"
+    db_press = db.query(models.Press).filter(models.Press.id == press_id).first()
+    if db_press:
+        # Just update the field user has requested
+        if press_update.name is not None:
+            db_press.name = press_update.name
+        if press_update.state is not None:
+            db_press.state = press_update.state
+        
+        db.commit()
+        db.refresh(db_press)
+    
+    return db_press
+
+# Delete a press
+def delete_press(db: Session, press_id: int):
+    db_press = db.query(models.Press).filter(models.Press.id == press_id).first()
+    if db_press:
+        db.delete(db_press)
+        db.commit()
+        return True
+    return False
+
 # Read Molds
 def get_molds(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Mold).offset(skip).limit(limit).all()
@@ -69,4 +94,17 @@ def create_order(db: Session, order: schemas.OrderCreate):
     db.commit()
     db.refresh(db_order)
 
+    return db_order
+
+# Update Order
+def update_order(db: Session, order_id: int, order_update: schemas.OrderUpdate):
+    db_order = db.query(models.Order).filter(models.Order.id == order_id).first()
+    if db_order:
+        # Use setattr to update just the requested fields 
+        update_data = order_update.model_dump(exclude_unset=True)
+        for key, value in update_data.items():
+            setattr(db_order, key, value)
+        
+        db.commit()
+        db.refresh(db_order)
     return db_order
