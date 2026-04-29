@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from database import engine, SessionLocal
 from typing import List
 from sqlalchemy.orm import Session
@@ -12,6 +13,15 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="App API",
     description="Backend system for App",
+)
+
+# --- CORS CONFIGURATION ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
 )
 
 # Open connection to database for each web request and closes it when it finishes
