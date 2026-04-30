@@ -10,7 +10,7 @@ class Press(Base):
     name = Column(String, unique=True, index=True)
     state = Column(String, default="activa") # Ex: active, inactive, maintenance
     
-    # Relation: To access easily to the planified orders in this press
+    # Relation: To access easily to the planned orders in this press
     orders = relationship("Order", back_populates="press")
 
 class Mold(Base):
@@ -28,9 +28,9 @@ class Reference(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     article_code = Column(String, unique=True, index=True)
-    descriptions = Column(String)
-    cicle_seconds = Column(Float)
-    pieces_per_circle = Column(Integer, default=1)
+    description = Column(String)
+    cycle_seconds = Column(Float)
+    pieces_per_cycle = Column(Integer, default=1)
     
     # Llave foránea: Esto vincula la referencia a un molde específico
     mold_id = Column(Integer, ForeignKey("molds.id"))

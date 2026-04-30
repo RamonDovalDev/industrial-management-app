@@ -64,9 +64,9 @@ def get_references(db: Session, skip: int = 0, limit: int = 100):
 def create_reference(db: Session, reference: schemas.ReferenceCreate):
     db_reference = models.Reference(
         article_code =reference.article_code,
-        descriptions = reference.descriptions,
-        cicle_seconds = reference.cicle_seconds,
-        pieces_per_circle = reference.pieces_per_circle,
+        description = reference.descriptions,
+        cycle_seconds = reference.cicle_seconds,
+        pieces_per_cycle = reference.pieces_per_circle,
         mold_id = reference.mold_id
     )
     db.add(db_reference)
@@ -77,7 +77,17 @@ def create_reference(db: Session, reference: schemas.ReferenceCreate):
 
 # Read Orders
 def get_orders(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Order).offset(skip).limit(limit).all()
+    orders = db.query(models.Order).offset(skip).limit(limit).all()
+
+    # Calculate duration for each order before sending
+    for order in orders:
+        if order.reference:
+            total_seconds = (order.quantity / order.reference.pieces_per_cycle) * order.reference.cycle_seconds
+            order.duration_minutes = total_seconds / 60
+        else:
+            order.duration_minutes = 0
+    
+    return orders
 
 # Create Order
 def create_order(db: Session, order: schemas.OrderCreate):
@@ -85,10 +95,10 @@ def create_order(db: Session, order: schemas.OrderCreate):
         order_number = order.order_number,
         client = order.client,
         quantity = order.quantity,
-        delivery_date=order.delivery_date,
-        state=order.state,
-        reference_id=order.reference_id,
-        press_id=order.press_id
+        delivery_date = order.delivery_date,
+        state= order.state,
+        reference_id = order.reference_id,
+        press_id = order.press_id
     )
     db.add(db_order)
     db.commit()

@@ -39,8 +39,8 @@ class Mold(MoldBase):
 class ReferenceBase(BaseModel):
     article_code: str
     descriptions: Optional[str] = None
-    cicle_seconds: float
-    pieces_per_circle: Optional[int ]= 1
+    cycle_seconds: float
+    pieces_per_cycle: Optional[int ]= 1
     mold_id: Optional[int] = None
 
 class ReferenceCreate(ReferenceBase):
@@ -48,6 +48,7 @@ class ReferenceCreate(ReferenceBase):
 
 class Reference(ReferenceBase):
     id: int
+    mold: Optional[Mold] = None
     model_config = ConfigDict(from_attributes=True)
 
 # SCHEMAS FOR "ORDER" ENTITY
@@ -65,6 +66,9 @@ class OrderCreate(OrderBase):
 
 class Order(OrderBase):
     id: int
+    reference: Optional[Reference] = None
+    press: Optional[Press] = None
+    duration_minutes: Optional[float] = None
     model_config = ConfigDict(from_attributes=True)
 
 class OrderUpdate(BaseModel):
