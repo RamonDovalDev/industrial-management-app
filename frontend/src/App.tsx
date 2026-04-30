@@ -49,7 +49,7 @@ const App: React.FC = () => {
           </div>
           <div>
             <h1 className="text-3xl font-black tracking-tighter text-white">
-              VISTA <span className="text-blue-500">PLATEX</span>
+              INDUSTRIAL <span className="text-blue-500">MANGEMENT</span>
             </h1>
             <p className="text-xs text-slate-500 font-medium tracking-widest">
               Production Control System
@@ -80,7 +80,7 @@ const App: React.FC = () => {
           {presses.map((press) => (
             <div
               key={press.id}
-              className="roup p-6 bg-slate-900 rounded-2xl border border-slate-800 shadow-2xl hover:border-blue-500/50 hover:bg-slate-800/50 transition-all duration-500"
+              className="group p-6 bg-slate-900 rounded-2xl border border-slate-800 shadow-2xl hover:border-blue-500/50 hover:bg-slate-800/50 transition-all duration-500"
             >
               <div className="flex items-start justify-between mb-6">
                 <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">
