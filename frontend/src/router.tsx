@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
+import Orders from "./pages/Orders";
 
 // Importaremos las páginas reales conforme las creemos
 const Placeholder = ({ name }: { name: string }) => (
@@ -16,7 +17,7 @@ export const router = createBrowserRouter([
     children: [
       { path: "/", element: <Dashboard /> },
       { path: "/planning", element: <Placeholder name="Planning Gantt" /> },
-      { path: "/orders", element: <Placeholder name="Orders Management" /> },
+      { path: "/orders", element: <Orders /> },
       {
         path: "/simulator",
         element: <Placeholder name="Impact Simulator" />,

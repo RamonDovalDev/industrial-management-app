@@ -53,7 +53,7 @@ const Layout: React.FC = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col">
+      <main className="flex-1 flex flex-col min-w-0">
         <header className="h-16 border-b border-slate-800 bg-slate-900/20 px-8 flex items-center justify-between">
           <div className="text-sm font-medium text-slate-500 uppercase tracking-widest">
             {menuItems.find((m) => m.path === location.pathname)?.label ||
