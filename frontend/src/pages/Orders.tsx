@@ -40,7 +40,7 @@ const Orders: React.FC = () => {
       });
   }, []);
 
-  // Function to calaculate the deadline
+  // Function to calculate the deadline
   const getDeadlineStatus = (date: string) => {
     const diff = new Date(date).getTime() - new Date().getTime();
     const days = diff / (1000 * 60 * 60 * 24);
@@ -68,7 +68,7 @@ const Orders: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      {/* Header y Filtros */}
+      {/* Header and Filters */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-black text-white tracking-tight">
@@ -93,7 +93,7 @@ const Orders: React.FC = () => {
           </button>
         </div>
       </div>
-      {/* Tabla de Pedidos */}
+      {/* Orders Table */}
       <div className="bg-slate-900/50 border border-slate-800 rounded-3xl overflow-x-auto backdrop-blur-xl">
         <table className="w-full text-left border-collapse">
           <thead>
