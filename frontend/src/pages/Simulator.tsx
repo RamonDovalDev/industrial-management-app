@@ -13,6 +13,8 @@ interface Reference {
   id: number;
   article_code: string;
   description: string;
+  cycle_seconds: number;
+  pieces_per_cycle: number;
 }
 
 const Simulator: React.FC = () => {
@@ -20,6 +22,7 @@ const Simulator: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isSimulating, setIsSimulating] = useState(false);
   const [result, setResult] = useState<null | "success" | "warning">(null);
+  const [calculatedHours, setCalculatedHours] = useState<number>(0);
 
   // Datos del formulario
   const [formData, setFormData] = useState({
@@ -40,12 +43,22 @@ const Simulator: React.FC = () => {
     setIsSimulating(true);
     setResult(null);
 
-    // Simulamos un retraso de procesamiento para dar realismo
+    // Search for the selected reference
+    const selectedRef = references.find((r) => r.id === Number(formData.refId));
+    if (!selectedRef) return;
+
+    // Calculate the necessary hours: (Quantity / Pieces per Cycle) * CycleSec / 3600
+    const totalSeconds =
+      (Number(formData.quantity) / selectedRef.pieces_per_cycle) *
+      selectedRef.cycle_seconds;
+    const neededHours = totalSeconds / 3600;
+    setCalculatedHours(neededHours);
+
+    // Simulate the processing
     setTimeout(() => {
       setIsSimulating(false);
-      // Lógica de simulación simple para el prototipo:
-      // Si la cantidad es > 5000, mostramos advertencia de retraso
-      setResult(Number(formData.quantity) > 5000 ? "warning" : "success");
+      // If order needs more than 48 hours of machine, it's a Warning (planning Conflict)
+      setResult(neededHours > 48 ? "warning" : "success");
     }, 1500);
   };
 
@@ -208,11 +221,17 @@ const Simulator: React.FC = () => {
                 current orders
               </p>
               <div className="bg-emerald-500/10 border border-emerald-500/20 p-4 rounded-2xl text-left">
-                <p className="text-xs text-emerald-400 font-bold uppercase mb-1">
-                  Estimated Impact
+                <p className="text-sm text-emerald-200">
+                  Total Machine Time:{" "}
+                  <span className="font-bold">
+                    {calculatedHours.toFixed(1)} hours
+                  </span>
                 </p>
                 <p className="text-sm text-emerald-200">
-                  Planning Delay: 0 hours
+                  Production days:{" "}
+                  <span className="font-bold">
+                    {(calculatedHours / 24).toFixed(1)} days
+                  </span>
                 </p>
                 <p className="text-sm text-emerald-200">Press Use: 65%</p>
               </div>
@@ -233,13 +252,17 @@ const Simulator: React.FC = () => {
               </p>
               <div className="bg-orange-500/10 border border-orange-500/20 p-4 rounded-2xl text-left">
                 <p className="text-xs text-orange-400 font-bold uppercase mb-1">
-                  Alerts
+                  Critical Alert
                 </p>
                 <p className="text-sm text-orange-200">
-                  Delay in ORD-1002: +14 hours
+                  Requires{" "}
+                  <span className="font-bold">
+                    {calculatedHours.toFixed(1)} hours
+                  </span>{" "}
+                  of uninterrupted production.
                 </p>
                 <p className="text-sm text-orange-200">
-                  Change required of extra mold.
+                  Risk: Overcomes the weekly capacity of a single press.
                 </p>
               </div>
             </div>
