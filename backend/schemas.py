@@ -68,7 +68,7 @@ class Order(OrderBase):
     id: int
     reference: Optional[Reference] = None
     press: Optional[Press] = None
-    duration_minutes: Optional[float] = None
+    #duration_minutes: Optional[float] = None
     model_config = ConfigDict(from_attributes=True)
 
 class OrderUpdate(BaseModel):

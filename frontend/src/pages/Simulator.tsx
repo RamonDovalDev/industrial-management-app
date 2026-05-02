@@ -159,7 +159,7 @@ const Simulator: React.FC = () => {
               ) : (
                 <>
                   <Play size={20} />
-                  RUN SIMULACIÓN
+                  RUN SIMULATION
                 </>
               )}
             </button>
