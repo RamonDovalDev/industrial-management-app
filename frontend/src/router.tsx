@@ -3,6 +3,7 @@ import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Orders from "./pages/Orders";
 import Planning from "./pages/Planning";
+import Simulator from "./pages/Simulator";
 
 // Importaremos las páginas reales conforme las creemos
 const Placeholder = ({ name }: { name: string }) => (
@@ -21,7 +22,7 @@ export const router = createBrowserRouter([
       { path: "/orders", element: <Orders /> },
       {
         path: "/simulator",
-        element: <Placeholder name="Impact Simulator" />,
+        element: <Simulator />,
       },
     ],
   },

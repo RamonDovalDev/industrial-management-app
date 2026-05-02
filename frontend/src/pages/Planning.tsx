@@ -41,7 +41,7 @@ const Planning: React.FC = () => {
   if (loading)
     return (
       <div className="p-8 text-blue-500 animate-pulse font-bold">
-        Generando Planning de Producción...
+        Generating Production Planning...
       </div>
     );
 
@@ -69,7 +69,7 @@ const Planning: React.FC = () => {
           <div className="px-4 flex items-center gap-2">
             <CalendarDays size={18} className="text-blue-500" />
             <span className="text-sm font-bold text-white">
-              HOY, {new Date().toLocaleDateString()}
+              TODAY, {new Date().toLocaleDateString()}
             </span>
           </div>
           <button className="p-2 hover:bg-slate-800 rounded-xl text-slate-400 transition-colors">
