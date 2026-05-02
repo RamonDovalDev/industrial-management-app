@@ -154,19 +154,19 @@ const Simulator: React.FC = () => {
               {isSimulating ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  PROCESANDO...
+                  PROCESSING...
                 </>
               ) : (
                 <>
                   <Play size={20} />
-                  EJECUTAR SIMULACIÓN
+                  RUN SIMULACIÓN
                 </>
               )}
             </button>
           </div>
         </div>
 
-        {/* Panel de Resultados */}
+        {/* Results Panel */}
         <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-8 backdrop-blur-xl flex flex-col justify-center items-center text-center">
           {!result && !isSimulating && (
             <div className="space-y-4">
