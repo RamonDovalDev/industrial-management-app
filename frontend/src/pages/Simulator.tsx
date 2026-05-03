@@ -8,6 +8,8 @@ import {
   CheckCircle2,
   Box,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 interface Reference {
   id: number;
@@ -23,6 +25,8 @@ const Simulator: React.FC = () => {
   const [isSimulating, setIsSimulating] = useState(false);
   const [result, setResult] = useState<null | "success" | "warning">(null);
   const [calculatedHours, setCalculatedHours] = useState<number>(0);
+  const [isSaving, setIsSaving] = useState(false);
+  const navigate = useNavigate();
 
   // Datos del formulario
   const [formData, setFormData] = useState({
@@ -60,6 +64,52 @@ const Simulator: React.FC = () => {
       // If order needs more than 48 hours of machine, it's a Warning (planning Conflict)
       setResult(neededHours > 48 ? "warning" : "success");
     }, 1500);
+  };
+
+  const handleConfirmOrder = async () => {
+    setIsSaving(true);
+    try {
+      const orderData = {
+        order_number: `SIM-${Math.floor(Math.random() * 10000)}`, // Generate a temporal number
+        client: formData.client || "Simulated Client",
+        quantity: Number(formData.quantity),
+        delivery_date: new Date(formData.deliveryDate).toISOString(),
+        reference_id: Number(formData.refId),
+        state: "pending", // Stays at Inbox
+      };
+
+      await axios.post("http://localhost:8000/orders/", orderData);
+      // API query notification
+      toast.success("Order successfully sent to the Planning!", {
+        duration: 4000,
+        style: {
+          background: "#1e293b", // Un color oscuro a juego con tu App
+          color: "#fff",
+          border: "1px solid #334155",
+        },
+      });
+      // Small pausefor user to read the toast message
+      setTimeout(() => {
+        navigate("/planning");
+      });
+
+      // Clean form or redirect
+      setFormData({
+        refId: "",
+        quantity: "",
+        client: "",
+        deliveryDate: "",
+      });
+
+      setResult(null); // Hid the simulator result panel
+    } catch (error) {
+      const errorMessage = axios.isAxiosError(error)
+        ? error.response?.data?.detail || "Server Error"
+        : "Unexpected Error.";
+      toast.error(`Error: ${errorMessage}`);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   if (loading)

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, computed_field
 from typing import Optional
 from datetime import datetime
 
@@ -66,13 +66,21 @@ class OrderCreate(OrderBase):
 
 class Order(OrderBase):
     id: int
+    planned_start: Optional[datetime] = None
     reference: Optional[Reference] = None
     press: Optional[Press] = None
     #duration_minutes: Optional[float] = None
     model_config = ConfigDict(from_attributes=True)
+    @computed_field
+    @property
+    def duration_minutes(self) -> float:
+        if self.reference and self.quantity:
+            return (self.quantity / self.reference.pieces_per_cycle) * (self.reference.cycle_seconds / 60)
+        return 0.0
 
 class OrderUpdate(BaseModel):
     press_id: Optional[int] = None
     state: Optional[str] = None
     delivery_date: Optional[datetime] = None
+    planned_start: Optional[datetime] = None
     quantity: Optional[int] = None

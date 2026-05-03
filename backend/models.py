@@ -47,6 +47,7 @@ class Order(Base):
     client = Column(String)
     quantity = Column(Integer)
     delivery_date = Column(DateTime)
+    planned_start = Column(DateTime, nullable=True)
     state = Column(String, default="pending") # pending, planned, production, finished
     
     # Foreign keys

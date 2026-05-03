@@ -110,11 +110,13 @@ def create_order(db: Session, order: schemas.OrderCreate):
 def update_order(db: Session, order_id: int, order_update: schemas.OrderUpdate):
     db_order = db.query(models.Order).filter(models.Order.id == order_id).first()
     if db_order:
-        # Use setattr to update just the requested fields 
+        # Turn schema into a Dict but exclude what has no requested 
         update_data = order_update.model_dump(exclude_unset=True)
         for key, value in update_data.items():
             setattr(db_order, key, value)
-        
-        db.commit()
-        db.refresh(db_order)
+
+    db.commit()
+    db.refresh(db_order)
+
     return db_order
+    

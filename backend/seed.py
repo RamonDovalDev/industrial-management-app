@@ -49,39 +49,59 @@ def load_test_data():
         )
 
         # Trial order
-        today = datetime.now()
+        today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
         test_orders = [
-            Order(order_number="ORD-2001", client="Air France", quantity=10000, 
-                  delivery_date=today + timedelta(days=10), state="production", reference=ref1, press=press1),
-            
-            Order(order_number="ORD-2002", client="Amazon Hub", quantity=15000, 
-                  delivery_date=today + timedelta(days=1), state="planned", reference=ref3, press=press1),
-            
-            Order(order_number="ORD-2003", client="IKEA", quantity=50000, 
-                  delivery_date=today + timedelta(days=15), state="planned", reference=ref1, press=press1),
-            
-            Order(order_number="ORD-2004", client="Wallmart", quantity=8000, 
-                  delivery_date=today + timedelta(days=7), state="pending", reference=ref2),
-            
-            Order(order_number="ORD-2005", client="Decathlon", quantity=12000, 
-                  delivery_date=today + timedelta(days=4), state="planned", reference=ref2, press=press1),
-           
-            Order(order_number="ORD-2006", client="Hospital Central", quantity=2500, 
-                  delivery_date=today, state="production", reference=ref3, press=press4),
+    # --- PRESS 1: Full Time ---
+    Order(order_number="ORD-2001", client="Air France", quantity=10000, 
+          delivery_date=today + timedelta(days=10), 
+          planned_start=today.replace(hour=8, minute=0), # Empieza a las 8:00 AM
+          state="production", reference=ref1, press=press1),
+    
+    Order(order_number="ORD-2002", client="Amazon Hub", quantity=15000, 
+          delivery_date=today + timedelta(days=1), 
+          planned_start=today.replace(hour=13, minute=30), # Empieza a las 1:30 PM
+          state="planned", reference=ref3, press=press1),
+    
+    Order(order_number="ORD-2009", client="Tech Data", quantity=3000, 
+          delivery_date=today + timedelta(days=5), 
+          planned_start=today.replace(hour=19, minute=0), # Turno de noche
+          state="planned", reference=ref1, press=press1),
 
-            Order(order_number="ORD-2007", client="Pasticceria Roma", quantity=1000, 
-                  delivery_date=today + timedelta(days=2), state="pending", reference=ref1),
+    # --- PRESS 2: VIP Order ---
+    Order(order_number="ORD-2008", client="Mercedes Benz (VIP)", quantity=5000, 
+          delivery_date=today + timedelta(days=12), 
+          planned_start=today.replace(hour=9, minute=0), 
+          state="planned", reference=ref2, press=press2),
 
-            Order(order_number="ORD-2008", client="Mercedes Benz (VIP)", quantity=5000, 
-                  delivery_date=today + timedelta(days=12), state="planned", reference=ref2, press=press2),
+    # --- PRENSA 4: Hospital Central ---
+    Order(order_number="ORD-2006", client="Hospital Central", quantity=2500, 
+          delivery_date=today + timedelta(days=1), 
+          planned_start=today.replace(hour=10, minute=0),
+          state="production", reference=ref3, press=press4),
 
-            Order(order_number="ORD-2009", client="Tech Data", quantity=3000, 
-                  delivery_date=today - timedelta(days=2), state="planned", reference=ref1, press=press1),
+    # --- PENDING ORDERS (No press neither no planned_start) ---
+    # Those that the production manager will drag later
+    Order(order_number="ORD-2003", client="IKEA", quantity=50000, 
+          delivery_date=today + timedelta(days=15), 
+          planned_start=None, state="planned", reference=ref1, press=press1), # Already assigned but with no specific time
+    
+    Order(order_number="ORD-2004", client="Wallmart", quantity=8000, 
+          delivery_date=today + timedelta(days=7), 
+          planned_start=None, state="pending", reference=ref2),
+          
+    Order(order_number="ORD-2005", client="Decathlon", quantity=12000, 
+          delivery_date=today + timedelta(days=4), 
+          planned_start=None, state="planned", reference=ref2, press=press1),
 
-            Order(order_number="ORD-2010", client="Global Logistics", quantity=100000, 
-                  delivery_date=today + timedelta(days=30), state="pending", reference=ref3)
-        ]
+    Order(order_number="ORD-2007", client="Pasticceria Roma", quantity=1000, 
+          delivery_date=today + timedelta(days=2), 
+          planned_start=None, state="pending", reference=ref1),
+
+    Order(order_number="ORD-2010", client="Global Logistics", quantity=100000, 
+          delivery_date=today + timedelta(days=30), 
+          planned_start=None, state="pending", reference=ref3)
+]
 
         db.add_all(test_orders)
 

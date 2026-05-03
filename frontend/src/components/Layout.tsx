@@ -27,7 +27,7 @@ const Layout: React.FC = () => {
               <Zap className="w-6 h-6 text-white" />
             </div>
             <h1 className="text-2xl font-black tracking-tighter text-white">
-              VISTA
+              Ind-Mng
             </h1>
           </div>
         </div>

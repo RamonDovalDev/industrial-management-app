@@ -95,5 +95,5 @@ def read_orders(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 def update_order(order_id: int, order_update: schemas.OrderUpdate, db: Session = Depends(get_db)):
     db_order = crud.update_order(db, order_id=order_id, order_update=order_update)
     if db_order is None:
-        raise HTTPException(status_code=404, detail="Pedido no encontrado")
+        raise HTTPException(status_code=404, detail="Order not found")
     return db_order
