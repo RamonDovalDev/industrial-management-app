@@ -23,6 +23,7 @@ interface Press {
   state: string;
 }
 
+// 1. Extraemos la lógica de cálculo fuera del componente para mayor limpieza
 const PIXELS_PER_HOUR = 100;
 
 const getXPosition = (dateStr: string | null) => {
@@ -38,7 +39,7 @@ const Planning: React.FC = () => {
   const [presses, setPresses] = useState<Press[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Day hours for header
+  // Horas del día para la cabecera
   const hours = Array.from(
     { length: 24 },
     (_, i) => `${i.toString().padStart(2, "0")}:00`,
