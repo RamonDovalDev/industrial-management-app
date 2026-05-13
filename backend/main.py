@@ -97,3 +97,8 @@ def update_order(order_id: int, order_update: schemas.OrderUpdate, db: Session =
     if db_order is None:
         raise HTTPException(status_code=404, detail="Order not found")
     return db_order
+
+@app.get("/orders/unplanned")
+def get_unplanned_orders(db: Session = Depends(get_db)):
+    # Orders that have no start date or assigned machine
+    return db.query(models.Order).filter(models.Order.planned_start == None).all()
