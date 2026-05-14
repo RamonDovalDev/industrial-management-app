@@ -24,9 +24,10 @@ interface Press {
   state: string;
 }
 
-// Escala de píxeles para el Gantt (1 hora = 120px)
+// Pixels Scale for the Gantt (1 hour = 120px)
 const PIXELS_PER_HOUR = 120;
 
+// Turn a specific hour into a X position on the screen
 const getXPosition = (dateStr: string | null) => {
   if (!dateStr) return 0;
   const d = new Date(dateStr);
@@ -35,7 +36,7 @@ const getXPosition = (dateStr: string | null) => {
   return h * PIXELS_PER_HOUR + m * (PIXELS_PER_HOUR / 60);
 };
 
-// Generamos las horas del día para la cabecera del Gantt (00:00 a 23:00)
+// Generate hours of the day for the Gantt Header (00:00 to 23:00)
 const hours = Array.from(
   { length: 24 },
   (_, i) => `${i.toString().padStart(2, "0")}:00`,
@@ -67,49 +68,49 @@ const Planning: React.FC = () => {
       <div className="flex-1 flex items-center justify-center h-full">
         <div className="animate-pulse text-blue-500 font-bold flex items-center gap-3">
           <div className="w-4 h-4 bg-blue-500 rounded-full animate-ping"></div>
-          Cargando Planificación...
+          Loading Planning...
         </div>
       </div>
     );
   }
 
   return (
-    // Contenedor principal: Ocupa todo el espacio que Layout le da.
+    // Main Container
     <div className="flex flex-row h-full w-full overflow-hidden text-gray-100">
-      {/* --- COLUMNA IZQUIERDA: BACKLOG --- */}
-      {/* w-80 (320px) fijos para las órdenes no planificadas */}
-      <div className="w-80 flex-shrink-0 border-r border-gray-800 bg-gray-950 flex flex-col h-full z-10 shadow-2xl relative">
+      {/* --- LEFT COLUMN: BACKLOG --- */}
+      {/* w-80 (320px) fixed for unplanned orders */}
+      <div className="w-80 shrink-0 border-r border-gray-800 bg-gray-950 flex flex-col h-full z-10 shadow-2xl relative">
         <UnplannedSidebar />
       </div>
 
-      {/* --- COLUMNA DERECHA: GANTT --- */}
-      {/* flex-1 (toma el resto del espacio) y min-w-0 (necesario para que flexbox corte textos largos) */}
+      {/* --- RIGHT COLUMN: GANTT --- */}
+      {/* flex-1 (take the rest of the space) and min-w-0 (necessary to flexbox cuts long texts) */}
       <div className="flex-1 flex flex-col min-w-0 bg-[#0d0d14] relative">
-        {/* Cabecera del Gantt */}
-        <div className="h-20 border-b border-gray-800 bg-gray-900/90 px-6 flex items-center justify-between flex-shrink-0 z-20">
+        {/* Gantt Header */}
+        <div className="h-20 border-b border-gray-800 bg-gray-900/90 px-6 flex items-center justify-between shrink-0 z-20">
           <div>
             <h2 className="text-2xl font-bold text-gray-100 tracking-tight">
-              Gantt por Prensa
+              Gantt for Press
             </h2>
-            {/* Leyenda de Colores */}
+            {/* Colors Legend */}
             <div className="flex items-center gap-4 mt-1.5 text-xs font-medium">
               <span className="flex items-center gap-1.5 text-gray-400">
                 <div className="w-2.5 h-2.5 rounded-sm bg-blue-600/50 border border-blue-500"></div>{" "}
-                Producción
+                Production
               </span>
               <span className="flex items-center gap-1.5 text-gray-400">
                 <div className="w-2.5 h-2.5 rounded-sm bg-purple-600/50 border border-purple-500"></div>{" "}
-                Cambio Molde
+                Mold Change
               </span>
               <span className="flex items-center gap-1.5 text-gray-400">
                 <div className="w-2.5 h-2.5 rounded-sm bg-red-500/50 border border-red-500"></div>{" "}
-                Crítico
+                Critical
               </span>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Controles de Fecha */}
+            {/* Date Controllers */}
             <div className="flex items-center bg-gray-950 border border-gray-800 rounded-lg p-1 shadow-inner">
               <button className="p-1.5 hover:bg-gray-800 rounded text-gray-400 transition-colors">
                 <ChevronLeft size={18} />
@@ -122,24 +123,24 @@ const Planning: React.FC = () => {
                 <ChevronRight size={18} />
               </button>
             </div>
-            {/* Filtros extra */}
+            {/* Extra Filters */}
             <button className="p-2 bg-gray-900 hover:bg-gray-800 border border-gray-800 rounded-lg text-gray-300 transition-colors">
               <Filter size={18} />
             </button>
           </div>
         </div>
 
-        {/* --- ÁREA DE SCROLL (EL GANTT REAL) --- */}
+        {/* --- SCROLL AREA (REAL GANTT) --- */}
         <div className="flex-1 overflow-auto custom-scrollbar relative">
-          {/* Cabecera del eje de tiempo (Sticky Top) */}
+          {/* Axis Time Header (Sticky Top) */}
           <div className="sticky top-0 z-30 flex border-b border-gray-800 bg-gray-900 shadow-md">
-            {/* Columna fija: Título "Maquinaria" (Sticky Left) */}
-            <div className="w-56 flex-shrink-0 p-3 border-r border-gray-800 sticky left-0 bg-gray-900 z-40 flex items-center shadow-lg">
+            {/* Fixed Column: Title "Machinery" (Sticky Left) */}
+            <div className="w-56 shrink-0 p-3 border-r border-gray-800 sticky left-0 bg-gray-900 z-40 flex items-center shadow-lg">
               <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-                Maquinaria
+                Machinery
               </span>
             </div>
-            {/* Escala de las horas */}
+            {/* Hours Scale */}
             <div
               className="flex"
               style={{ width: `${24 * PIXELS_PER_HOUR}px` }}
@@ -147,7 +148,7 @@ const Planning: React.FC = () => {
               {hours.map((hour) => (
                 <div
                   key={hour}
-                  className="flex-shrink-0 text-center border-r border-gray-800/40 text-[10px] font-bold text-gray-500 py-3"
+                  className="shrink-0 text-center border-r border-gray-800/40 text-[10px] font-bold text-gray-500 py-3"
                   style={{ width: `${PIXELS_PER_HOUR}px` }}
                 >
                   {hour}
@@ -156,15 +157,15 @@ const Planning: React.FC = () => {
             </div>
           </div>
 
-          {/* Filas de Producción */}
-          {/* Calculamos el ancho total: ancho del timeline + ancho de la columna de máquinas (224px = w-56) */}
+          {/* Production Rows */}
+          {/* Calculate total width:timeline width + machien column width (224px = w-56) */}
           <div
             className="relative"
             style={{ width: `${24 * PIXELS_PER_HOUR + 224}px` }}
           >
-            {/* Línea vertical roja: MOMENTO ACTUAL (AHORA) */}
+            {/* Red vertical line: CURRENT TIME (NOW) */}
             <div
-              className="absolute top-0 bottom-0 w-[2px] bg-red-500 z-20 pointer-events-none"
+              className="absolute top-0 bottom-0 w-0.5 bg-red-500 z-20 pointer-events-none"
               style={{
                 left: `${224 + getXPosition(new Date().toISOString())}px`,
               }}
@@ -184,8 +185,8 @@ const Planning: React.FC = () => {
                   key={press.id}
                   className="flex border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors group"
                 >
-                  {/* Columna Fija: Nombre de Prensa e info (Sticky Left) */}
-                  <div className="w-56 flex-shrink-0 p-4 border-r border-gray-800 sticky left-0 bg-[#0d0d14] group-hover:bg-[#12121a] transition-colors z-10 flex flex-col justify-center">
+                  {/* Fixed Column: Press name and info (Sticky Left) */}
+                  <div className="w-56 shrink-0 p-4 border-r border-gray-800 sticky left-0 bg-[#0d0d14] group-hover:bg-[#12121a] transition-colors z-10 flex flex-col justify-center">
                     <h4 className="text-sm font-bold text-gray-200">
                       {press.name}
                     </h4>

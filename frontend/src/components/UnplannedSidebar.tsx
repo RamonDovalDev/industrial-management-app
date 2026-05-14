@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Clock, Package, AlertCircle } from "lucide-react";
+import { AlertCircle, Clock, Package } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 interface Order {
@@ -28,8 +28,8 @@ const UnplannedSidebar: React.FC = () => {
       .catch(() => setLoading(false));
   }, []);
 
-  // Función para determinar colores e iconos según la urgencia (días restantes)
-  const getUrgencyStyles = (dateStr: string) => {
+  // Function to determine colors and icons according to urgency (remaining days)
+  const getUrgenStyles = (dateStr: string) => {
     const today = new Date();
     const delivery = new Date(dateStr);
     const diffDays = Math.ceil(
@@ -58,30 +58,30 @@ const UnplannedSidebar: React.FC = () => {
   };
 
   return (
-    // Usa w-full porque el ancho (w-80) ya lo define Planning.tsx
+    // Use w-full because the width (w-80) is already defined by Planning.tsx
     <div className="flex flex-col h-full w-full bg-gray-950">
-      {/* --- CABECERA DEL BACKLOG --- */}
-      <div className="p-5 border-b border-gray-800 flex-shrink-0">
+      {/* --- BACKLOG HEADER --- */}
+      <div className="p-5 border-b border-gray-800 shrink-0">
         <div className="flex items-center justify-between mb-1">
-          <h3 className="text-sm font-black text-gray-100 tracking-widest uppercase">
-            Backlog
+          <h3 className="text-sm text-gray-100 font-black tracking-widest uppercase">
+            BACKLOG
           </h3>
-          {/* Badge contador de órdenes */}
+          {/* Orders Counter Badge */}
           <span className="px-2 py-0.5 bg-blue-600/20 border border-blue-500/50 text-blue-400 text-[10px] font-bold rounded">
-            {unplanned.length} ÓRDENES
+            {unplanned.length} ORDERS
           </span>
         </div>
         <p className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">
-          Pendientes de asignación
+          Awaiting assigment
         </p>
       </div>
 
-      {/* --- LISTA DE ÓRDENES (SCROLLABLE) --- */}
+      {/* --- ORDERS LIST (SCROLLABLE) --- */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
         {loading ? (
           <div className="flex justify-center mt-10">
-            {/* Spinner técnico en vez del clásico texto "Loading..." */}
-            <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            {/* Technical Spinner instead of classic "Loading..." */}
+            <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : unplanned.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-gray-600 gap-2">
@@ -92,14 +92,14 @@ const UnplannedSidebar: React.FC = () => {
           </div>
         ) : (
           unplanned.map((order) => {
-            const urgency = getUrgencyStyles(order.delivery_date);
+            const urgency = getUrgenStyles(order.delivery_date);
 
             return (
               <div
                 key={order.id}
                 className={`p-3.5 rounded-lg border transition-all cursor-grab active:cursor-grabbing shadow-md group ${urgency.wrapper}`}
               >
-                {/* ID de la orden e Icono de Urgencia */}
+                {/* Order ID and Urgency Icon */}
                 <div className="flex items-start justify-between mb-2">
                   <span className="text-[11px] font-black uppercase text-gray-200">
                     {order.order_number}
@@ -107,12 +107,12 @@ const UnplannedSidebar: React.FC = () => {
                   {urgency.icon}
                 </div>
 
-                {/* Cliente */}
-                <p className="text-xs font-bold text-gray-400 truncate mb-3">
+                {/* Client */}
+                <p className="text-xs font-bold text-gray-400  truncate mb-3">
                   {order.client}
                 </p>
 
-                {/* Referencia Técnica */}
+                {/* Technical Reference */}
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-6 h-6 rounded bg-gray-950 border border-gray-800 flex items-center justify-center">
                     <Package size={12} className="text-blue-500" />
@@ -121,12 +121,11 @@ const UnplannedSidebar: React.FC = () => {
                     Ref: {order.reference?.article_code || "N/A"}
                   </span>
                 </div>
-
-                {/* Métricas (Cantidades y Tiempos) */}
+                {/* Metrics (Amounts and times) */}
                 <div className="pt-2.5 border-t border-gray-800/50 flex justify-between items-center">
                   <div className="flex flex-col">
                     <span className="text-[9px] text-gray-500 font-bold uppercase">
-                      Unidades
+                      Units
                     </span>
                     <span className="text-[10px] font-bold text-gray-300">
                       {order.quantity.toLocaleString()}
