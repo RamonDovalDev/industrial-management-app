@@ -83,12 +83,21 @@ const Layout: React.FC = () => {
 
           {/* Configuration Button */}
           <div className="w-full mt-auto px-2">
-            <button className="group relative flex items-center justify-center w-12 h-12 rounded-xl text-gray-500 hover:bg-gray-900 hover:text-gray-300 transition-all duration-300">
+            <NavLink
+              to="/settings"
+              className={({ isActive }) =>
+                `group relative flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-300 ${
+                  isActive
+                    ? "bg-blue-600/10 text-blue-500 shadow-[inset_2px_0_0_0_rgba(59,130,246,1)]"
+                    : "text-gray-500 hover:bg-gray-900 hover:text-gray-300"
+                }`
+              }
+            >
               <Settings size={22} strokeWidth={1.5} />
               <div className="absolute left-14 px-2 py-1 bg-gray-800 text-gray-200 text-xs font-semibold rounded opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 border border-gray-700 shadow-xl">
                 Configuration
               </div>
-            </button>
+            </NavLink>
           </div>
         </aside>
 

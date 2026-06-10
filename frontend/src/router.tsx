@@ -4,6 +4,8 @@ import Dashboard from "./pages/Dashboard";
 import Planning from "./pages/Planning";
 import Orders from "./pages/Orders";
 import Simulator from "./pages/Simulator";
+import Settings from "./pages/Settings";
+import Test from "./pages/Test";
 
 export const router = createBrowserRouter([
   {
@@ -25,6 +27,14 @@ export const router = createBrowserRouter([
       {
         path: "/simulator",
         element: <Simulator />,
+      },
+      {
+        path: "/settings",
+        element: <Settings />,
+      },
+      {
+        path: "/test",
+        element: <Test />,
       },
       // Catch-all route (404) for undefined routes
       {

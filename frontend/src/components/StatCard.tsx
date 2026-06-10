@@ -1,7 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import React from "react";
 
-const StatCard = ({ title, value, icon, color }: any) => {
+const StatCard: React.FC = ({ title, value, icon, color }: any) => {
   return (
     <div className="p-6 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl hover:border-blue-500/30 transition-all group">
       <div className="flex items-center justify-between mb-4">
