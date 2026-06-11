@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import engine, SessionLocal
 from typing import List
 from sqlalchemy.orm import Session
+from sqlalchemy import func
+from datetime import datetime, timedelta
 from fastapi import HTTPException
 import models, schemas, crud
 
@@ -102,3 +104,26 @@ def update_order(order_id: int, order_update: schemas.OrderUpdate, db: Session =
 def get_unplanned_orders(db: Session = Depends(get_db)):
     # Orders that have no start date or assigned machine
     return db.query(models.Order).filter(models.Order.planned_start == None).all()
+
+# ------ ENDPOINTS FOR DASHBOARD  ------
+@app.get("/summary")
+def get_dashboard_summary(db: Session = Depends(get_db)):
+    # 1. Count production orders
+    active_orders = db.query(models.Order).filter(models.Order.state =='production').count()
+
+    # 2. Count active presses
+    active_presses = db.query(models.Press).filter(models.Press.state == 'active').count()
+
+    # 3. Orders at risk
+    risk_threshold = datetime.now() + timedelta(days=3)
+    orders_at_risk = db.query(models.Order).filter(models.Order.delivery_date <= risk_threshold, models.Order.state != 'finished').count()
+
+    # 4. Mold change (By now, simulate metric)
+    mold_changes_week = 12
+
+    return {
+        "active_orders": active_orders,
+        "active_presses": active_presses,
+        "mold_changes_week": mold_changes_week,
+        "orders_at_risk": orders_at_risk
+    }

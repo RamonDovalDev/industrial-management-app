@@ -5,7 +5,7 @@ from database import SessionLocal, engine, Base
 from models import Press, Mold, Reference, Order
 
 def load_test_data():
-    print("Emtying database...")
+    print("Emptying database...")
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
 

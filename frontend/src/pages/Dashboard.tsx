@@ -23,39 +23,17 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Because it's V1, simulate data aggregation fetching current endpoints
-    // In final verssion, FastAPI Backend might have a specific "dashboard/summary" endpoint
-    Promise.all([
-      axios.get("http://localhost:8000/orders/"),
-      axios.get("http://localhost:8000/presses/"),
-    ])
-      .then(([ordersRes, pressesRes]) => {
-        const orders = ordersRes.data;
-        const presses = pressesRes.data;
-
-        const activeOrders = orders.filter(
-          (o: any) => o.state === "in_progress",
-        ).length;
-        const activePresses = presses.filter(
-          (p: any) => p.state === "active",
-        ).length;
-
-        // Simulate risk deadlines calculation (deliveries in less than 3 days)
-        const today = new Date().getTime();
-        const atRisk = orders.filter((o: any) => {
-          const diff = new Date(o.delivery_date).getTime() - today;
-          return diff < 3 * 24 * 60 * 60 * 1000;
-        }).length;
-
-        setStats({
-          active_orders: activeOrders || orders.length, // Fallback if there's no "in_progress" state
-          active_presses: activePresses || presses.length,
-          mold_changes_week: 12, // Simulated date at now
-          orders_at_risk: atRisk,
-        });
+    // FastAPI "magic"; return pre-calculated JSON
+    axios
+      .get("http://localhost:0000/summary")
+      .then((res) => {
+        setStats(res.data);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((err) => {
+        console.error("Error fetching dashboard summary: ", err);
+        setLoading(false);
+      });
   }, []);
 
   if (loading)
