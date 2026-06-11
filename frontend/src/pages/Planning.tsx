@@ -63,6 +63,47 @@ const Planning: React.FC = () => {
       });
   }, []);
 
+  // === DRAG & DROP LOGIC ===
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, pressId: number) => {
+    e.preventDefault(); // Avoid default browser behavior
+
+    // 1. Retrieve the order ID that was saved by the SIdebar "ghost"
+    const orderIdStr = e.dataTransfer.getData("orderId");
+    if (!orderIdStr) return;
+    const orderId = parseInt(orderIdStr, 10);
+
+    // 2. Mathematical Magic: Calculate the exact time the mouse has let it go
+    const rect = e.currentTarget.getBoundingClientRect();
+    const xPosition = e.clientX - rect.left; // Pixels on the X-axis from the edge of the row
+
+    // Convert pixels to minutes
+    const totalMinutes = (xPosition / PIXELS_PER_HOUR) * 60;
+
+    // Build the new start date
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Run at midnight
+    const newPlannedStart = new Date(today.getTime() + totalMinutes * 60000);
+
+    // 3. Send update order to the server FastAPI (PUT)
+    axios
+      .put(`http://localhost:8000/orders/${orderId}`, {
+        press_id: pressId,
+        planned_start: newPlannedStart.toISOString(),
+        state: "planned", // The state automatically transition from 'pending' to 'planned'
+      })
+      .then(() => {
+        // 4. If el Backend responds OK, reload the Gantt orders
+        axios
+          .get("http://localhost:8000/orders/")
+          .then((res) => setOrders(res.data));
+        // 5. Notify the left Sidebar it must reload and hide the order
+        window.dispatchEvent(new Event("reload-orders"));
+      })
+      .catch((err) =>
+        console.error("Error assigning order to themachine: ", err),
+      );
+  };
+
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center h-full">
@@ -200,8 +241,15 @@ const Planning: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Fila en el tiempo para esta prensa */}
-                  <div className="relative flex-1 h-20">
+                  {/* Timeline for this press */}
+                  <div
+                    className="relative flex-1 h-20"
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.dataTransfer.dropEffect = "move";
+                    }}
+                    onDrop={(e) => handleDrop(e, press.id)}
+                  >
                     {/* Renderizamos los Bloques de Producción */}
                     {pressOrders.map((order) => {
                       const leftPx = getXPosition(order.planned_start);
